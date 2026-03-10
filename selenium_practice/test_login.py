@@ -7,15 +7,31 @@ driver = webdriver.Chrome()
 driver.get("https://www.saucedemo.com/")
 driver.maximize_window()
 
+# Enter username
 username = driver.find_element(By.ID, "user-name")
+username.send_keys("standard_user")
 
-username.send_keys("gunesh")
+# Enter password
+password = driver.find_element(By.ID, "password")
+password.send_keys("secret_sauce")
 
-pass_word = driver.find_element(By.ID,"password")
-pass_word.send_keys("123")
+# Click login
+login = driver.find_element(By.ID, "login-button")
+login.click()
 
+time.sleep(3)
 
-time.sleep(5)
+# Add product to cart
+add_cart = driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack")
+add_cart.click()
 
+time.sleep(2)
+
+# Now cart badge exists
+cart = driver.find_element(By.CLASS_NAME, "shopping_cart_badge")
+
+print("Cart items:", cart.text)
+
+time.sleep(3)
 
 driver.quit()
