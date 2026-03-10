@@ -1,37 +1,27 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-driver = webdriver.Chrome()
+def test_login_add_to_cart():
 
-driver.get("https://www.saucedemo.com/")
-driver.maximize_window()
+    driver = webdriver.Chrome()
+    driver.get("https://www.saucedemo.com/")
+    driver.maximize_window()
 
-# Enter username
-username = driver.find_element(By.ID, "user-name")
-username.send_keys("standard_user")
+    # Login
+    driver.find_element(By.ID,"user-name").send_keys("standard_user")
+    driver.find_element(By.ID,"password").send_keys("secret_sauce")
+    driver.find_element(By.ID,"login-button").click()
 
-# Enter password
-password = driver.find_element(By.ID, "password")
-password.send_keys("secret_sauce")
+    # Add product
+    driver.find_element(By.ID,"add-to-cart-sauce-labs-backpack").click()
 
-# Click login
-login = driver.find_element(By.ID, "login-button")
-login.click()
+    # Wait until cart badge appears
+    cart = WebDriverWait(driver,10).until(
+        EC.visibility_of_element_located((By.CLASS_NAME,"shopping_cart_badge"))
+    )
 
-time.sleep(3)
+    assert cart.text == "1"
 
-# Add product to cart
-add_cart = driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack")
-add_cart.click()
-
-time.sleep(2)
-
-# Now cart badge exists
-cart = driver.find_element(By.CLASS_NAME, "shopping_cart_badge")
-
-print("Cart items:", cart.text)
-
-time.sleep(3)
-
-driver.quit()
+    driver.quit()
